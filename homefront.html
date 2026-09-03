@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Week 2 Assignment Node.js + React Basics </title>
+        <style>
+            table, th, td {
+            border: 1px solid black;
+            padding: 15px;
+
+            }
+        </style>
+
+        <script src="https://code.jquery.com/jquery-4.0.0.min.js"> </script> <!--jquery for json load-->
+
+        <!--babel for browser to convert jsx to js but usually should be done in server-->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+        <script type="importmap">
+            {
+                "imports": {
+                    "react": "https://esm.sh/react@latest",
+                    "react-dom/client": "https://esm.sh/react-dom@latest/client",
+                    "react/jsx-runtime": "https://esm.sh/react@latest/jsx-runtime"
+                }
+            }
+        </script>
+
+    </head>
+
+    <body>
+
+        <h1>Types of Animals</h1>
+        <div id="firstApp"> </div>
+
+        <script data-type="module" data-presets="react" type="text/babel">
+            "use strict";
+            //loads react as javascript module using import methods right now it's loading from CDN
+            import React from 'https://cdn.jsdelivr.net/npm/react@19.1.1/+esm';
+            import { createRoot } from 'https://cdn.jsdelivr.net/npm/react-dom@19.1.1/client/+esm';
+            //createRoot method connects react library to the article (firstApp) method pulled using {}
+
+            //jsx will get react to make the html elements 
+            function AnimalsList(kinds){
+                return (
+                    <div>
+                        <table>
+                            <tr> 
+                                <th> Name </th>
+                                <th> Website </th>
+                            </tr>
+                                { 
+                                kinds.list.map( //map( ) loops through the array we pass into kinds.list
+                                    (animal, counter) => (
+                                        //counter aka where it's starting from 0, etc
+                                        //table row tr, td table data
+                                        <tr key={counter}> 
+
+                                            <td> {animal.name}
+                                            </td>
+
+                                            <td>
+                                                <a href={animal.link}>
+                                                    {animal.link}
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    )       
+                                )} 
+                        </table>
+                     </div>
+                    );
+            }
+
+            //json loaded using jquery, two arguments for getJSON a url and then a function that receives json
+            $.getJSON(
+                "reveal",
+                function(json) {
+                    console.log(json);
+                    //react finds html element
+                    const theElement = document.getElementById('firstApp');
+                    //call the createRoot method 
+                    const theRoot = createRoot(theElement);
+                    //render() outputs component 
+                    theRoot.render(
+                        <AnimalsList list={json} />
+                    );
+                }
+            );
+        </script>
+
+    </body>
+</html>
